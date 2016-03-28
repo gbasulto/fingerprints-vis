@@ -24,9 +24,17 @@ shinyUI(fluidPage(
       
       br(),
       
-      radioButtons("pattern", "Pattern", c("Male", "Female", "Both")),
-      
-      radioButtons("gender", "Gender", c("Male", "Female", "Both")),
+      checkboxGroupInput("class", 
+                         label = "Class", 
+                         choices = c("Arch", "Left loop", "Right loop", 
+                                     "Tented arch", "Whorl"), 
+                         selected = c("Arch", "Left loop", "Right loop", 
+                                      "Tented arch", "Whorl")),
+
+      checkboxGroupInput("gender", 
+                         label = "Gender", 
+                         choices = c("Female", "Male"), 
+                         selected = c("Male", "Female")),
       
       sliderInput("n", 
                   "Number of observations:", 
@@ -38,7 +46,8 @@ shinyUI(fluidPage(
     # Show a tabset that includes a plot, summary, and table view
     # of the generated distribution
     mainPanel(
-      tabsetPanel(type = "tabs", 
+      tabsetPanel(type = "tabs",
+                  tabPanel("Description", includeMarkdown("description.md")), 
                   tabPanel("Image", plotOutput("image", width = 512, height = 512)), 
                   tabPanel("Pair", plotOutput("pair"))
       )

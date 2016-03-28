@@ -27,13 +27,35 @@ shinyServer(function(input, output) {
     dist(input$n)
   })
   
+  class <- reactive({
+    clss <- 
+      input$class %>%
+      {gsub("Arch", "A", .)} %>%
+      {gsub("Left loop", "L", .)} %>%
+      {gsub("Right loop", "R", .)} %>%
+      {gsub("Tented arch", "T", .)} %>%
+      {gsub("Whorl", "W", .)}
+
+    if(length(clss) == 0) stop("Must select at least one class.")
+    
+    return(clss)
+  })
+  
+  gender <- reactive({
+    gndr <- 
+      gsub("Male", "M", input$gender) %>%
+      {gsub("Female", "F", .)}
+    if(length(gndr) == 0) stop("Must select at least one gender.")
+    return(gndr)
+  })
+  
   reactive_image <- eventReactive(input$sample_button, {
-    sample_image(db_dirr, info, Class = "L", Gender = "M") %>%
+    sample_image(db_dirr, info, Class = class(), Gender = gender()) %>%
       display_image()
   })
   
   reactive_pair <- eventReactive(input$sample_button, {
-    sample_pair(db_dirr, info, Class = "L", Gender = "M") %>%
+    sample_pair(db_dirr, info, Class = class(), Gender = gender()) %>%
       display_pair()
   })
   
