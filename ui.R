@@ -1,22 +1,32 @@
+library(png)
+library(magrittr)
+library(stringr)
+library(plyr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(fingerprints)
 library(shiny)
 
 # Define UI for random distribution application 
 shinyUI(fluidPage(
     
   # Application title
-  titlePanel("Tabsets"),
+  titlePanel("Fingerprints"),
   
   # Sidebar with controls to select the random distribution type
   # and number of observations to generate. Note the use of the
   # br() element to introduce extra vertical spacing
   sidebarLayout(
     sidebarPanel(
-      radioButtons("dist", "Distribution type:",
-                   c("Normal" = "norm",
-                     "Uniform" = "unif",
-                     "Log-normal" = "lnorm",
-                     "Exponential" = "exp")),
+      
+      actionButton("sample_button", label = "Click here for new sample"),
+      
       br(),
+      
+      radioButtons("pattern", "Pattern", c("Male", "Female", "Both")),
+      
+      radioButtons("gender", "Gender", c("Male", "Female", "Both")),
       
       sliderInput("n", 
                   "Number of observations:", 
@@ -29,9 +39,8 @@ shinyUI(fluidPage(
     # of the generated distribution
     mainPanel(
       tabsetPanel(type = "tabs", 
-        tabPanel("Plot", plotOutput("plot")), 
-        tabPanel("Summary", verbatimTextOutput("summary")), 
-        tabPanel("Table", tableOutput("table"))
+                  tabPanel("Image", plotOutput("image", width = 512, height = 512)), 
+                  tabPanel("Pair", plotOutput("pair"))
       )
     )
   )

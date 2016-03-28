@@ -1,5 +1,14 @@
 library(shiny)
 
+## Set directory
+db_dirr <- paste0("./../NISTSpecialDatabase4GrayScaleImagesofFIGS/",
+                  "sd04/png_txt/")
+
+## Load database
+info <- extract_info_df(db_dirr)
+
+
+
 # Define server logic for random distribution application
 shinyServer(function(input, output) {
   
@@ -18,27 +27,22 @@ shinyServer(function(input, output) {
     dist(input$n)
   })
   
-  # Generate a plot of the data. Also uses the inputs to build
-  # the plot label. Note that the dependencies on both the inputs
-  # and the data reactive expression are both tracked, and
-  # all expressions are called in the sequence implied by the
-  # dependency graph
-  output$plot <- renderPlot({
-    dist <- input$dist
-    n <- input$n
+  reactive_image <- eventReactive(input$sample_button, {
+    sample_image(db_dirr, info, Class = "L", Gender = "M") %>%
+      display_image()
+  })
+  
+  reactive_pair <- eventReactive(input$sample_button, {
+    sample_pair(db_dirr, info, Class = "L", Gender = "M") %>%
+      display_pair()
+  })
+  
+  output$image <- renderPlot({
+    reactive_image()
+  })
+
+  output$pair <- renderPlot({
+    reactive_pair()
+  })
     
-    hist(data(), 
-         main=paste('r', dist, '(', n, ')', sep=''))
-  })
-  
-  # Generate a summary of the data
-  output$summary <- renderPrint({
-    summary(data())
-  })
-  
-  # Generate an HTML table view of the data
-  output$table <- renderTable({
-    data.frame(x=data())
-  })
-  
 })
