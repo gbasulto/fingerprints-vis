@@ -34,13 +34,7 @@ shinyUI(fluidPage(
       checkboxGroupInput("gender", 
                          label = "Gender", 
                          choices = c("Female", "Male"), 
-                         selected = c("Male", "Female")),
-      
-      sliderInput("n", 
-                  "Number of observations:", 
-                   value = 500,
-                   min = 1, 
-                   max = 1000)
+                         selected = c("Male", "Female"))
     ),
     
     # Show a tabset that includes a plot, summary, and table view
